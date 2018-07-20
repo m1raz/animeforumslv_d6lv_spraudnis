@@ -1,0 +1,36 @@
+<!-- Šī daļa liekama starp <head> </head> vai jebkur, kur ir CSS -->
+<head>
+	<style>
+		div.anim {
+			opacity: 1.0;
+			animation-name: aaa;
+			animation-duration: 1s;
+		}
+		@keyframes aaa {
+			from { opacity: 0.0;}
+			to { opacity: 1.0;}
+		}
+	</style>
+</head>
+
+<!-- 'Šo bāžam tur, kur spraudnis atradīsies -->
+<div id="spraudnis"></div>
+
+<!-- Šo bāžam lapas beigās -->
+<script>
+	function requestTopicList(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'http://86.63.172.23/spraudnis.php', false); /// nomainīt uz https://d6.lv/spraudnis.php
+		xhr.send();
+		if (xhr.status != 200) {
+			alert( xhr.status + ': ' + xhr.statusText );
+		}
+		else
+		{
+			var html = JSON.parse(xhr.responseText);
+			document.getElementById("spraudnis").innerHTML = "<div class='anim'>" + html + "</div>";
+		}
+	}
+	requestTopicList();
+	setInterval(requestTopicList, 15000);
+</script>
