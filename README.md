@@ -14,3 +14,5 @@ Install:
 
 If you want to disable reload remove last row from lapa.html
 If you want to change reload time, change 15000 to (sec * 1000) of your reloading time. 
+
+Current script will use your default styles for div, h3, a. If you want to change it change script.
