@@ -1,0 +1,99 @@
+<!-- Šī daļa liekama starp <head> </head> vai jebkur, kur ir CSS -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+	<style>
+		div.anim {
+			opacity: 1.0;
+			animation-name: aaa;
+			animation-duration: 1s;
+		}
+		@keyframes aaa {
+			from { opacity: 0.0;}
+			to { opacity: 1.0;}
+		}
+		a:link {
+			color: #3fa659;
+			text-decoration: none;
+		}
+		a:visited {
+			color: #3fa659;
+			text-decoration: none;
+		}
+		a:hover {
+			color: #286638;
+			text-decoration: none;
+		}
+		a:active {
+			color: #3fa659;
+			text-decoration: none;
+		}
+		a::after {
+		  content: "\A\A";
+		}
+	</style>
+</head>
+
+<!-- 'Šo bāžam tur, kur spraudnis atradīsies -->
+<div id="spraudnis" class="w3-content"></div>
+
+<!-- Šo bāžam lapas beigās -->
+<script>
+	function pauseRequestsForTenMinutes()
+	{
+		//document.getElementById("spraudnis").innerHTML = "<h1>PAUSED</h1>" + document.getElementById("spraudnis").innerHTML;
+		conf.paused = true;
+		clearInterval(interval);
+		setTimeout(function(){
+			conf.paused = false;
+			requestTopicList();
+			interval = setInterval(requestTopicList, 15000);
+		}, 1000 * 60 * 10);
+	}
+
+	function requestTopicList(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'http://86.63.172.23/spraudnis2.php', false); /// nomainīt uz https://d6.lv/spraudnis.php
+		xhr.send();
+		if (xhr.status != 200) {
+			alert( xhr.status + ': ' + xhr.statusText );
+		}
+		else
+		{
+			var html = JSON.parse(xhr.responseText);
+			document.getElementById("spraudnis").innerHTML = "<div class='anim'>" + html + "</div>";
+		}
+	}
+	
+	requestTopicList();
+	var interval = setInterval(requestTopicList, 15000);
+	
+	var conf = 
+	{
+		ytiframeMouseOver : false,
+		paused : false
+	}
+	window.addEventListener('mousemove',
+		function()
+		{
+			if(conf.ytiframeMouseOver && !conf.paused)
+			{
+				pauseRequestsForTenMinutes();
+			}
+		}
+	);
+	for(i = 0; i < document.getElementsByTagName("iframe").length; i++)
+	{
+		document.getElementsByTagName("iframe")[i].addEventListener('mouseover',
+			function()
+			{
+				alert(true);
+				conf.ytiframeMouseOver = true;
+			}
+		);
+	}
+</script>
